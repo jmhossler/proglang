@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "eval.h"
-#include "lexer.h"
-#include "types.h"
-#include "parser.h"
-#include "env.h"
+#include "evaluation/eval.h"
+#include "lexer/lexer.h"
+#include "types/types.h"
+#include "parser/parser.h"
+#include "environment/env.h"
 
 Lexeme *createBuiltin();
 

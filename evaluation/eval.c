@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include "eval.h"
-#include "lexer.h"
-#include "parser.h"
-#include "env.h"
-#include "types.h"
+#include "../lexer/lexer.h"
+#include "../parser/parser.h"
+#include "../environment/env.h"
+#include "../types/types.h"
 
 /*-------- Declarations --------*/
 

@@ -3,7 +3,7 @@
  */
 #ifndef PARSER_CS403_JH_2016
 #define PARSER_CS403_JH_2016
-#include "lexer.h"
+#include "../lexer/lexer.h"
 
 typedef struct parser {
   FILE *fp;

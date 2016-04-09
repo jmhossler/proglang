@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "types.h"
+#include "../types/types.h"
 #include "lexer.h"
 
 int isWhiteSpace(int);

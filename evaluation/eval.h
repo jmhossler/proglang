@@ -1,6 +1,6 @@
 #ifndef EVAL_CS403_JH_2016
 #define EVAL_CS403_JH_2016
-#include "lexer.h"
+#include "../lexer/lexer.h"
 
 Lexeme *eval(Lexeme *, Lexeme *);
 Lexeme *evalPrint(Lexeme *, Lexeme *);

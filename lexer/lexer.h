@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "parser.h"
+#include "../parser/parser.h"
 
 typedef struct lexeme {
   char *type;

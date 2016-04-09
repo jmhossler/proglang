@@ -4,9 +4,9 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "lexer.h"
-#include "parser.h"
-#include "types.h"
+#include "../lexer/lexer.h"
+#include "../parser/parser.h"
+#include "../types/types.h"
 
 /*--------FUNCTION DECLARATIONS-------*/
 

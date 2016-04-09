@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "types.h"
-#include "lexer.h"
-#include "env.h"
-#include "parser.h"
+#include "../types/types.h"
+#include "../lexer/lexer.h"
+#include "../environment/env.h"
+#include "../parser/parser.h"
 
 int sameVariable(Lexeme *,Lexeme *);
 
