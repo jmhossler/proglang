@@ -1,0 +1,8 @@
+var oneToN = function (n) {
+  while(n != 0) {
+    print(n,"\n");
+    n = n - 1;
+  }
+};
+
+oneToN(10);

@@ -1,0 +1,11 @@
+var x = function(x) {
+  var f = function(y) {
+    x + y;
+  };
+  this;
+};
+
+var y = x(4);
+print("Here\n");
+print("Anon: ",(function(x) { x; })(3),",Should be 3\n");
+print("Y: ",y.f(3),",Should be 7\n");

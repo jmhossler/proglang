@@ -1,0 +1,17 @@
+var func = function(x) {
+  if(x < 2) {
+    print("X is less than two!\n");
+  } else if(x == 2) {
+    print("X is two!\n");
+  } else {
+    print("X is greater than two!\n");
+  }
+};
+
+var x = 1;
+
+while(x < 4) {
+  print(x,"\n");
+  func(x);
+  x = x + 1;
+}

@@ -1,0 +1,7 @@
+var x = function() {
+  print("Here is a super long string that is over 16 characters\n");
+};
+
+var randomGibberishToGetOver16Char = x();
+
+

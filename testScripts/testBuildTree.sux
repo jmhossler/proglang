@@ -1,0 +1,13 @@
+var x = function (x,y) {
+  function (c) {
+    (x ** c) - y;
+  };
+};
+
+var m = x(2,0);
+
+var n = 0;
+while(n != 20) {
+  print(m(n),"\n");
+  n = n + 1;
+}

@@ -1,0 +1,14 @@
+var fib = function(n) {
+  if(n == 0 || n == 1) {
+    n;
+  } else {
+    fib(n-1) + fib(n-2);
+  }
+};
+
+var x = 0;
+while(x != 10) {
+  //print(x,"\n");
+  print("Fib ",x,": ",fib(x),"\n");
+  x = x + 1;
+}

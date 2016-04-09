@@ -1,0 +1,8 @@
+include("println.sux");
+
+var x = 0;
+
+while(x < 30) {
+  println("Hello, ",x);
+  x += 1;
+}

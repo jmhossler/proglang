@@ -1,0 +1,14 @@
+var x = 1;
+var z = {0,x,2,3};
+
+var main = function(x) {
+  if(x == 0) {
+    1;
+  } else {
+    0;
+  }
+};
+
+var y = main(1);
+z[main(y)] = 2;
+print(z[main(y)],"\n");

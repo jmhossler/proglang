@@ -1,0 +1,8 @@
+var println = function(@) {
+  if(@ == nil) {
+    print("\n");
+  } else {
+    print(car(@));
+    println(cdr(@));
+  }
+};

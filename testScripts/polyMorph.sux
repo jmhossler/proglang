@@ -1,0 +1,34 @@
+var animal = function() {
+  var speak;
+  var type;
+  this;
+};
+
+var dog = function() {
+  var d = animal();
+  d.speak = function() { print("Woof\n"); };
+  d.type = "Dog";
+  d;
+};
+
+var cat = function() {
+  var c = animal();
+  c.speak = function() { print("Meow\n"); };
+  c.type = "Cat";
+  c;
+};
+
+var horse = function() {
+  var h = animal();
+  h.speak = function() { print("Neigh\n"); };
+  h.type = "Horse";
+  h;
+};
+
+var h = horse();
+var d = dog();
+var c = cat();
+
+h.speak();
+d.speak();
+c.speak();
