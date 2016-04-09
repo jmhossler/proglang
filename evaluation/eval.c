@@ -102,14 +102,18 @@ Lexeme *evalJoin(Lexeme *tree, Lexeme *env) {
 
 Lexeme *evalInclude(Lexeme *tree, Lexeme *env) {
   Lexeme *eargs = evalExprList(tree,env);
-  //displayTree(eargs,"");
   Lexeme *val = NULL;
   Lexeme *result = NULL;
-  while(eargs != NULL) {
+  while(eargs != NULL && strcmp(eargs->type,NIL)) {
     val = car(eargs);
     if(strcmp(val->type,STRING) == 0) {
       FILE *fp = fopen(val->sval,"r");
-      result = eval(parse(fp),env);
+      if(!fp) {
+        fprintf(stderr,"Cannot open %s, invalid filename\n",val->sval);
+        result = lexeme(NIL);
+      } else {
+        result = eval(parse(fp),env);
+      }
     } else {
       fprintf(stderr,"Cannot open %s\n",displayLexeme(*val));
     }
@@ -120,14 +124,17 @@ Lexeme *evalInclude(Lexeme *tree, Lexeme *env) {
 
 Lexeme *evalPrint(Lexeme *tree, Lexeme *env) {
   //printf("Starting print\n");
+  //displayTree(tree,"");
   Lexeme *eargs = evalExprList(tree,env);
+  //printf("Arguments evaluated\n");
   Lexeme *val = NULL;
   Lexeme *result = lexeme(STRING);
   result->sval = "print-done";
   result->ival = 10;
   //displayTree(eargs,"");
-  while(eargs != NULL) {
+  while(eargs != NULL && strcmp(eargs->type,NIL)) {
     val = car(eargs);
+    //printf("Printing %s\n",displayLexeme(*val));
     if(strcmp(val->type,INTEGER) == 0) {
       printf("%d",val->ival);
     } else if(strcmp(val->type,STRING) == 0) {
@@ -142,7 +149,7 @@ Lexeme *evalPrint(Lexeme *tree, Lexeme *env) {
 }
 
 int eargsLength(Lexeme *tree) {
-  if(tree == NULL) {
+  if(tree == NULL || !strcmp(tree->type,NIL)) {
     return 0;
   } else {
     return 1 + eargsLength(cdr(tree));
@@ -162,7 +169,7 @@ Lexeme *evalCons(Lexeme *tree, Lexeme *env) {
 Lexeme *evalCar(Lexeme *tree, Lexeme *env) {
   Lexeme *eargs = evalExprList(tree,env);
   if(eargsLength(eargs) == 1) {
-    return car(eargs);
+    return car(car(eargs));
   } else {
     fprintf(stderr,"Incorrect number of arguments to Car\n");
     return lexeme(NIL);
@@ -172,7 +179,7 @@ Lexeme *evalCar(Lexeme *tree, Lexeme *env) {
 Lexeme *evalCdr(Lexeme *tree, Lexeme *env) {
   Lexeme *eargs = evalExprList(tree,env);
   if(eargsLength(eargs) == 1) {
-    return cdr(eargs);
+    return cdr(car(eargs));
   } else {
     fprintf(stderr,"Incorrect number of arguments to Cdr\n");
     return lexeme(NIL);
@@ -228,7 +235,7 @@ Lexeme *evalFuncDef(Lexeme *tree, Lexeme *env) {
 }
 
 Lexeme *getClosure(Lexeme *tree, Lexeme *env) {
-  if(strcmp(car(tree)->type,CLOSURE) == 0) {
+  if(!strcmp(car(tree)->type,CLOSURE) || !strcmp(car(tree)->type,BUILTIN)) {
     return car(tree);
   } else {
     return eval(car(tree),env);
@@ -261,10 +268,10 @@ Lexeme *evalFuncArgs(Lexeme *tree, Lexeme *params, Lexeme *env) {
     return lexeme(NIL);
   } else if(!strcmp(car(params)->sval,"@")) {
     Lexeme *list = evalExprList(tree,env);
-    if(list == NULL) {
+    if(list == NULL || !strcmp(list->type,NIL)) {
       return lexeme(NIL);
     } else {
-      return cons(JOIN,evalExprList(tree,env),NULL);
+      return cons(JOIN,list,lexeme(NIL));
     }
   } else if(typeEqual(car(params),lexeme(OPAREN))) {
     return cons(JOIN,thunk(car(tree),env),evalFuncArgs(cdr(tree),cdr(params),env));
@@ -274,9 +281,9 @@ Lexeme *evalFuncArgs(Lexeme *tree, Lexeme *params, Lexeme *env) {
 }
 
 Lexeme *evalExprList(Lexeme *tree, Lexeme *env) {
-  if(tree == NULL) {
+  if(tree == NULL || !strcmp(tree->type,NIL)) {
     //printf("Finished eval expr list\n");
-    return NULL;
+    return lexeme(NIL);
   } else {
     //printf("Eval expr: %s\n",displayLexeme(*(eval(car(tree),env))));
     return cons(JOIN,eval(car(tree),env),evalExprList(cdr(tree),env));
@@ -301,6 +308,7 @@ Lexeme *evalFuncCall(Lexeme *tree, Lexeme *env) {
   Lexeme *params = getParams(closure);
   //printf("Eval args\n");
   Lexeme *eargs = evalFuncArgs(cdr(tree),params,env);
+  //displayTree(eargs,"");
   //printf("make scope\n");
 
   Lexeme *newScope = extend(params,eargs,getDefScope(closure));;
@@ -415,10 +423,10 @@ Lexeme *evalPlus(Lexeme *tree, Lexeme *env) {
     result->ival = left->ival + right->ival;
   } else if(areEqual(left,right,STRING)) {
     result = lexeme(STRING);
-    int size = left->ival + right->ival;
+    int size = left->ival + right->ival - 1;
     char *new = malloc(sizeof(char) * size);
     int i = 0, j = 0;
-    while(i < left->ival) {
+    while(i < left->ival-1) {
       new[i] = left->sval[i];
       i++;
     }
@@ -658,7 +666,9 @@ Lexeme *evalEqual(Lexeme *tree, Lexeme *env) {
   } else if(areEqual(left,right,STRING)) {
     result->ival = strcmp(left->sval,right->sval) == 0;
   } else if(typeEqual(left,lexeme(NIL)) || typeEqual(right,lexeme(NIL))) {
+    //printf("One is nil\n");
     if(areEqual(left,right,NIL)) {
+      //printf("Both are nil\n");
       result->ival = 1;
     } else {
       result->ival = 0;
@@ -669,6 +679,7 @@ Lexeme *evalEqual(Lexeme *tree, Lexeme *env) {
   return result;
 }
 
+//TODO fix for nil cases
 Lexeme *evalNot_equal(Lexeme *tree, Lexeme *env) {
   Lexeme *left = eval(car(tree),env);
   Lexeme *right = eval(cdr(tree),env);

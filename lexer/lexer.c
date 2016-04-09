@@ -187,6 +187,7 @@ Lexeme *lexID(FILE *fp, int c) {
     n = getNextCharacter(fp);
   }
   ungetc(n,fp);
+  name[filled++] = '\0';
   if(!strcmp(name,"function")) {
     new->type = LAMBDA;
   } else if(!strcmp(name,"if")) {
@@ -237,6 +238,7 @@ Lexeme *lexString(FILE *fp, int c) {
     }
     n = getNextCharacter(fp);
   }
+  string[filled++] = '\0';
   new->sval = string;
   new->ival = filled;
 

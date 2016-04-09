@@ -1,4 +1,4 @@
-include("println.sux");
+include("testScripts/println.sux");
 
 var x = 0;
 
