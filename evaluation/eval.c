@@ -49,6 +49,8 @@ Lexeme *evalDot(Lexeme *, Lexeme *);
 Lexeme *evalNil(Lexeme *, Lexeme *);
 Lexeme *evalExprList(Lexeme *, Lexeme *);
 Lexeme *evalJoin(Lexeme *, Lexeme *);
+Lexeme *evalEnv(Lexeme *, Lexeme *);
+Lexeme *evalClosure(Lexeme *, Lexeme *);
 
 /* Closure helper functions */
 Lexeme *getParams(Lexeme *);
@@ -450,7 +452,10 @@ Lexeme *evalAssign(Lexeme *tree, Lexeme *env) {
   } else if(!strcmp((car(tree))->type,DOT)) {
     Lexeme *nEnv = eval(car(car(tree)),env);
     Lexeme *id = cdr(car(tree));
-    return update(id,val,nEnv);
+    Lexeme *asgn = lexeme(ASSIGN);
+    asgn->left = id;
+    asgn->right = val;
+    return evalAssign(asgn,nEnv);
   } else if(!strcmp((car(tree))->type,ARRAYCALL)) {
     Lexeme *ind = eval(cdr(car(tree)),env);
     Lexeme *arr = eval(car(car(tree)),env);
@@ -467,6 +472,14 @@ Lexeme *evalAssign(Lexeme *tree, Lexeme *env) {
     }
   }
   return val;
+}
+
+Lexeme *evalEnv(Lexeme *tree, Lexeme *env) {
+  return tree;
+}
+
+Lexeme *evalClosure(Lexeme *tree, Lexeme *env) {
+  return tree;
 }
 
 Lexeme *evalIf(Lexeme *tree, Lexeme *env) {
@@ -865,6 +878,10 @@ evalFunction getEvalFunction(char *type) {
     return evalJoin;
   } else if(!strcmp(type,NIL)) {
     return evalNil;
+  } else if(!strcmp(type,ENV)) {
+    return evalEnv;
+  } else if(!strcmp(type,CLOSURE)) {
+    return evalClosure;
   } else {
     return NULL;
   }
