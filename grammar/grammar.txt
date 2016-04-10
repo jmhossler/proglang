@@ -1,0 +1,87 @@
+optStatementList: statementList
+                | *empty*
+
+expression: primary
+          | primary operator expression
+          | VAR ID optInit
+
+optInit: ASSIGN expression
+       | *empty*
+
+primary: primitive
+       | uOp expression
+       | idExpr
+       | parenExpr                          // Anonymous function calls, or parenthesized expression
+       | OB optExpressionList CB            // Array creation
+       | anonFunc                           // Anonymous function creation
+       | VAR ID optInit?
+
+parenExpr: OPAREN expression CPAREN OPAREN optExpressionList CPAREN
+         | OPAREN expression CPAREN
+         | OPAREN expression CPAREN OBRACE expressionList CBRACE
+         | OPAREN expression CPAREN DOT idExpr
+
+idExpr: ID OPAREN optExpressionList CPAREN
+      | ID
+      | ID OBRACE expression CBRACE
+      | ID DOT idExpr
+
+primitive: STRING
+         | INT
+  //     | ENVIRONMENT ?add
+         | NIL
+
+uOp: MINUS
+   | NOT
+
+operator: PLUS            // +
+        | TIMES           // *
+        | MINUS           // -
+        | DIVIDE          // /
+        | EXP             // ^
+        | MOD             // %
+        | LESS_THAN       // <     /* STRICTLY INTEGER
+        | LT_OR_EQ        // <=     * TYPES
+        | GREATER_THAN    // >      *
+        | GT_OR_EQ        // >=     *
+        | EQUAL           // ==     *
+        | NOT_EQUAL       // ~=     */
+        | STRICT_EQ       // ===    // must eq in type as well
+        | STRICT_NEQ      // ~==
+        | OR              // ||
+        | AND             // &&
+        | ASSIGN          // =
+
+optExpressionList: expressionList
+                 | *empty*
+
+expressionList: expression
+              | expression COMMA expressionList
+
+block: OB optStatementList CB
+
+statementList: statement
+             | statement statementList
+
+statement: ifStatement
+         | whileLoop
+         | expression SEMI
+
+ifStatement: IF OPAREN expression CPAREN block optElse
+
+optElse: ELSE block
+       | ELSE ifStatement
+       | *empty*
+
+whileLoop: WHILE OPAREN expression CPAREN block
+
+anonFunc: FUNCTION OPAREN optParameterList CPAREN block
+
+optParameterList: parameterList
+                | *empty*
+
+parameterList: ID
+             | ID COMMA parameterList
+             | OPAREN ID CPAREN
+             | OPAREN ID CPAREN COMMA parameterList
+
