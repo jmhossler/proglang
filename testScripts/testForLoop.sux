@@ -1,0 +1,12 @@
+var for = function((init),(condition),(incr),(body)) {
+  init;
+  while(condition) {
+    body;
+    incr;
+  }
+};
+
+var x;
+for(x = 0, x < 10, x += 1, print(x,"\n"));
+for(x = 0, x < 5, x += 1,
+    (function(x) { print(x * 5,"\n"); })(x));

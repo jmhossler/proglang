@@ -62,6 +62,7 @@ Lexeme *getClosure(Lexeme *, Lexeme *);
 int areEqual(Lexeme *,Lexeme *, char *);
 Lexeme *thunk(Lexeme *, Lexeme *);
 Lexeme **resizeLexArr(Lexeme **, size_t *size);
+Lexeme *stripOparen(Lexeme *);
 
 typedef Lexeme *(*evalFunction)(Lexeme *, Lexeme *);
 evalFunction getEvalFunction(char *);
@@ -141,6 +142,8 @@ Lexeme *evalPrint(Lexeme *tree, Lexeme *env) {
       printf("%d",val->ival);
     } else if(strcmp(val->type,STRING) == 0) {
       printf("%s",val->sval);
+    } else if(!strcmp(val->type,NIL)) {
+      printf("nil");
     } else {
       fprintf(stderr,"UNKOWN TYPE FOR PRINT %s\n",val->type);
     }
@@ -258,26 +261,38 @@ Lexeme *thunk(Lexeme *tree, Lexeme *env) {
 }
 
 Lexeme *evalThunk(Lexeme *tree, Lexeme *env) {
+  //printf("Tree:\n");
+  //displayTree(car(tree),"");
+  //printf("Env:\n");
+  //displayEnv(cdr(tree));
   return eval(car(tree),cdr(tree));
 }
 
 Lexeme *evalFuncArgs(Lexeme *tree, Lexeme *params, Lexeme *env) {
   if((tree == NULL && params == NULL) || areEqual(tree,params,NIL)) {
+    //printf("Both nil\n");
     return lexeme(NIL);
   } else if(tree == NULL || !strcmp(tree->type,NIL)) {
+    //printf("tree nil\n");
     return lexeme(NIL);
   } else if(params == NULL || !strcmp(params->type,NIL)) {
+    //printf("params nil\n");
     return lexeme(NIL);
+  } else if(!strcmp(car(params)->type,OPAREN)) {
+    //printf("thunk!\n");
+    //printf("thing to be delayed:\n");
+    //displayTree(car(tree),"");
+    return cons(JOIN,thunk(car(tree),env),evalFuncArgs(cdr(tree),cdr(params),env));
   } else if(!strcmp(car(params)->sval,"@")) {
+    //printf("variadic\n");
     Lexeme *list = evalExprList(tree,env);
     if(list == NULL || !strcmp(list->type,NIL)) {
       return lexeme(NIL);
     } else {
       return cons(JOIN,list,lexeme(NIL));
     }
-  } else if(typeEqual(car(params),lexeme(OPAREN))) {
-    return cons(JOIN,thunk(car(tree),env),evalFuncArgs(cdr(tree),cdr(params),env));
   } else {
+    //printf("Normal shit\n");
     return cons(JOIN,eval(car(tree),env),evalFuncArgs(cdr(tree),cdr(params),env));
   }
 }
@@ -296,6 +311,18 @@ Lexeme *getBody(Lexeme *closure) {
   return cdr(cdr(closure));
 }
 
+Lexeme *stripOparen(Lexeme *tree) {
+  if(tree == NULL || !strcmp(tree->type,NIL)) {
+    return lexeme(NIL);
+  } else {
+    if(!strcmp(car(tree)->type,OPAREN)) {
+      return cons(JOIN,car(car(tree)),stripOparen(cdr(tree)));
+    } else {
+      return cons(JOIN,car(tree),stripOparen(cdr(tree)));
+    }
+  }
+}
+
 Lexeme *evalFuncCall(Lexeme *tree, Lexeme *env) {
   //printf("Eval func %s\n",displayLexeme(*tree));
   Lexeme *closure = getClosure(tree,env);
@@ -310,6 +337,7 @@ Lexeme *evalFuncCall(Lexeme *tree, Lexeme *env) {
   Lexeme *params = getParams(closure);
   //printf("Eval args\n");
   Lexeme *eargs = evalFuncArgs(cdr(tree),params,env);
+  params = stripOparen(params);
   //displayTree(eargs,"");
   //printf("make scope\n");
 
@@ -402,7 +430,14 @@ Lexeme *evalVar(Lexeme *tree, Lexeme *env) {
 }
 
 Lexeme *evalId(Lexeme *tree, Lexeme *env) {
-  return lookup(tree,env);
+  Lexeme *x = lookup(tree,env);
+  if(!strcmp(x->type,THUNK)) {
+    //printf("Evaling %s\n",displayLexeme(*x));
+    //printf("result %s\n",displayLexeme(*(eval(x,env))));
+    return eval(x,env);
+  } else {
+    return x;
+  }
 }
 
 Lexeme *evalInt(Lexeme *tree, Lexeme *env) {
