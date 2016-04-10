@@ -77,7 +77,7 @@ Lexeme *parse(FILE *fp) {
   Parser *p = malloc(sizeof(Parser));
   // Initialize values
   p->fp = fp;
-  p->pending = lex(p->fp);
+  p->pending = lex(p);
   p->line = 1;
   p->out = stdout;
   Lexeme *tree = NULL;
@@ -98,7 +98,7 @@ int check(Parser *p, char *t) {
 
 void advance(Parser *p) {
   p->previous = p->pending;
-  p->pending = lex(p->fp);
+  p->pending = lex(p);
 }
 
 Lexeme *match(Parser *p, char *t) {
@@ -112,7 +112,7 @@ void matchNoAdvance(Parser *p, char *t) {
   if(!check(p,t)) {
     printf("illegal\n");
     fprintf(stderr,"Syntax error\n");
-    fprintf(stderr,"Expected type %s, found %s\n",t,displayLexeme(*(p->pending)));
+    fprintf(stderr,"Expected type %s, found %s at line %d\n",t,displayLexeme(*(p->pending)),p->line);
     fprintf(stderr,"Previous type %s\n",displayLexeme(*(p->previous)));
     exit(1);
   }

@@ -9,7 +9,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "../parser/parser.h"
+
+typedef struct parser Parser;
 
 typedef struct lexeme {
   char *type;
@@ -25,7 +26,7 @@ typedef struct lexeme {
   struct lexeme *(*builtin)(struct lexeme *,struct lexeme *);
 } Lexeme;
 
-Lexeme *lex(FILE *);
+Lexeme *lex(Parser *);
 Lexeme *lexeme(char *);
 Lexeme *cons(char *,Lexeme *, Lexeme *);
 Lexeme *car(Lexeme *);

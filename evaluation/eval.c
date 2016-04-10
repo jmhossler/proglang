@@ -76,9 +76,9 @@ Lexeme *eval(Lexeme *tree, Lexeme *env) {
   if(tree == NULL) {
     return lexeme(NIL);
   }
-  printf("Eval %s\n",displayLexeme(*tree));
+  //printf("Eval %s\n",displayLexeme(*tree));
   //displayTree(tree,"");
-  displayEnv(env);
+  //displayEnv(env);
   evalFunction f = getEvalFunction(tree->type);
   if(f == NULL) {
     fprintf(stderr,"No evaluation function for type %s\n",tree->type);

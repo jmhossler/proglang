@@ -2,21 +2,22 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "../parser/parser.h"
 #include "../types/types.h"
 #include "lexer.h"
 
 int isWhiteSpace(int);
-void skipWhiteSpace(FILE *);
-int getNextCharacter(FILE *);
+void skipWhiteSpace(Parser *);
+int getNextCharacter(Parser *);
 char *resize(char *, int *);
 
-Lexeme *lexNumber(FILE *, int);
-Lexeme *lexString(FILE *, int);
-Lexeme *lexID(FILE *, int);
+Lexeme *lexNumber(Parser *, int);
+Lexeme *lexString(Parser *, int);
+Lexeme *lexID(Parser *, int);
 Lexeme *badLexeme(int);
 
 // TODO cleanup
-Lexeme *lex(FILE *p) {
+Lexeme *lex(Parser *p) {
   int c;
   skipWhiteSpace(p);
   c = getNextCharacter(p);
@@ -45,21 +46,21 @@ Lexeme *lex(FILE *p) {
       if(c == '=') {
         return lexeme(INCREMENT);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return lexeme(PLUS);
     case '-':
       c = getNextCharacter(p);
       if(c == '=') {
         return lexeme(DECREMENT);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return lexeme(MINUS);
     case '*':
       c = getNextCharacter(p);
       if(c == '*') {
         return lexeme(EXP);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return lexeme(TIMES);
     case '/':
       return lexeme(DIVIDE);
@@ -70,14 +71,14 @@ Lexeme *lex(FILE *p) {
       if(c == '=') {
         return lexeme(LT_EQ);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return lexeme(LESS_THAN);
     case '>':
       c = getNextCharacter(p);
       if(c == '=') {
         return lexeme(GT_EQ);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return lexeme(GREATER_THAN);
     case '=':
       c = getNextCharacter(p);
@@ -86,10 +87,10 @@ Lexeme *lex(FILE *p) {
         if(c == '=') {
           return lexeme(STRICT_EQ);
         }
-        ungetc(c,p);
+        ungetc(c,p->fp);
         return lexeme(EQUAL);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return lexeme(ASSIGN);
     case ';':
       return lexeme(SEMI);
@@ -100,24 +101,24 @@ Lexeme *lex(FILE *p) {
         if(c == '=') {
           return lexeme(STRICT_NEQ);
         }
-        ungetc(c,p);
+        ungetc(c,p->fp);
         return lexeme(NOT_EQUAL);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return lexeme(NOT);
     case '&':
       c = getNextCharacter(p);
       if(c == '&') {
         return lexeme(AND);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return badLexeme(c);
     case '|':
       c = getNextCharacter(p);
       if(c == '|') {
         return lexeme(OR);
       }
-      ungetc(c,p);
+      ungetc(c,p->fp);
       return badLexeme(c);
     case '^':
       return lexeme(XOR);
@@ -149,44 +150,44 @@ Lexeme *lexeme(char *s) {
   return new;
 }
 
-Lexeme *lexNumber(FILE *fp, int c) {
+Lexeme *lexNumber(Parser *p, int c) {
   int filled = 1, size = 16;
   int n;
   char *num = malloc(sizeof(char) * size);
   Lexeme *new = lexeme(INTEGER);
   num[0] = c;
-  n = getNextCharacter(fp);
+  n = getNextCharacter(p);
 
   while(isdigit(n) && !isWhiteSpace(n) && n != EOF) {
     if(filled >= size) {
       num = resize(num,&size);
     }
     num[filled++] = n;
-    n = getNextCharacter(fp);
+    n = getNextCharacter(p);
   }
-  ungetc(n,fp);
+  ungetc(n,p->fp);
   new->ival = atoi(num);
   new->sval = num;
 
   return new;
 }
 
-Lexeme *lexID(FILE *fp, int c) {
+Lexeme *lexID(Parser *p, int c) {
   int filled = 1, size = 16;
   int n;
   Lexeme *new = lexeme(ID);
   char *name = malloc(sizeof(char) * size);
   name[0] = c;
-  n = getNextCharacter(fp);
+  n = getNextCharacter(p);
 
   while((isalpha(n) || isdigit(n)) && !isWhiteSpace(n) && n != EOF) {
     if(filled >= size) {
       name = resize(name,&size);
     }
     name[filled++] = n;
-    n = getNextCharacter(fp);
+    n = getNextCharacter(p);
   }
-  ungetc(n,fp);
+  ungetc(n,p->fp);
   name[filled++] = '\0';
   if(!strcmp(name,"function")) {
     new->type = LAMBDA;
@@ -206,12 +207,12 @@ Lexeme *lexID(FILE *fp, int c) {
   return new;
 }
 
-Lexeme *lexString(FILE *fp, int c) {
+Lexeme *lexString(Parser *p, int c) {
   int filled = 0, size = 16;
   int n;
   Lexeme *new = lexeme(STRING);
   char *string = malloc(sizeof(char) * size);
-  n = getNextCharacter(fp);
+  n = getNextCharacter(p);
 
   while(n != '\"') {
     if(n == EOF) {
@@ -224,7 +225,7 @@ Lexeme *lexString(FILE *fp, int c) {
     if(n != '\\') {
       string[filled++] = n;
     } else {
-      n = getNextCharacter(fp);
+      n = getNextCharacter(p);
       if(n == 'n') {
         string[filled++] = '\n';
       } else if(n == 't') {
@@ -232,11 +233,11 @@ Lexeme *lexString(FILE *fp, int c) {
       } else if(n == 'r') {
         string[filled++] = '\r';
       } else {
-        ungetc(n,fp);
+        ungetc(n,p->fp);
         string[filled++] = '\\';
       }
     }
-    n = getNextCharacter(fp);
+    n = getNextCharacter(p);
   }
   string[filled++] = '\0';
   new->sval = string;
@@ -298,13 +299,16 @@ char *displayLexeme(Lexeme l) {
   return string;
 }
 
-void skipWhiteSpace(FILE *p) {
+void skipWhiteSpace(Parser *p) {
   int c = getNextCharacter(p);
 
-  while(!feof(p) && isWhiteSpace(c)) {
+  while(!feof(p->fp) && isWhiteSpace(c)) {
+    if(c == '\n') {
+      p->line++;
+    }
     c = getNextCharacter(p);
   }
-  ungetc(c,p);
+  ungetc(c,p->fp);
 }
 
 int isWhiteSpace(int c) {
@@ -312,18 +316,18 @@ int isWhiteSpace(int c) {
 }
 
 // TODO ignore comments
-int getNextCharacter(FILE *p) {
-  int c = fgetc(p);
+int getNextCharacter(Parser *p) {
+  int c = fgetc(p->fp);
 
   // ignoring comments
   if(c == '/') {
-    int s = fgetc(p);
+    int s = fgetc(p->fp);
     if(s == '/') {
-      while(!feof(p) && c != '\n') {
-        c = fgetc(p);
+      while(!feof(p->fp) && c != '\n') {
+        c = fgetc(p->fp);
       }
     } else {
-      ungetc(s,p);
+      ungetc(s,p->fp);
     }
   }
 
