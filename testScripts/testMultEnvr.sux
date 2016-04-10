@@ -1,0 +1,17 @@
+var i = function() {
+  var x = 10;
+  this;
+};
+
+var f = function() {
+  var n = i();
+  this;
+};
+
+var y = f();
+
+print(y.n.x,"\n");
+
+y.n.x = 11;
+
+print(y.n.x,"\n");

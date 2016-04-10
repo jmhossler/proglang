@@ -1,0 +1,52 @@
+var Node = function() {
+    var value = nil;
+    var left = nil;
+    var right = nil;
+    this;
+};
+
+var addHelper = function(node, n) {
+    if (node.value == nil) {
+        node.value = n;
+    } else {
+        if (n < node.value) {
+            if(node.left == nil) {
+              node.left = Node();
+            }
+            addHelper(node.left, n);
+        } else {
+            if(node.right == nil) {
+              node.right = Node();
+            }
+            addHelper(node.right, n);
+        }
+    }
+};
+
+var BinaryTree = function() {
+    var root = Node();
+
+    var add = function(n) {
+        addHelper(root, n);
+    };
+    this;
+};
+
+var displayTree = function(tree,tab) {
+  if(!(tree == nil)) {
+    displayTree(tree.left,tab+" ");
+    print(tab,tree.value,"\n");
+    displayTree(tree.right,tab+" ");
+  }
+};
+
+var tree = BinaryTree();
+tree.add(4);
+tree.add(2);
+tree.add(1);
+tree.add(6);
+tree.add(3);
+tree.add(5);
+tree.add(7);
+
+displayTree(tree.root,"");
