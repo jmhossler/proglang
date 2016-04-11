@@ -1,0 +1,27 @@
+var x = array(10);
+
+var i = 0;
+while(i < 10) {
+  x[i] = i + 10;
+  i += 1;
+}
+
+i = 0;
+while(i < 11) {
+  println("x[",i,"]: ",x[i]);
+  i += 1;
+}
+
+append(x,11);
+
+println("");
+println("After appending:");
+i = 0;
+while(i < 11) {
+  println("x[",i,"]: ",x[i]);
+  i += 1;
+}
+
+println("");
+println("Length: ",length(x));
+println("Length of hello: ",length("hello"));

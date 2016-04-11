@@ -1,16 +1,13 @@
 include("stdlib/dictionary.sux");
+var tree = Dictionary();
 
-var tree = RedBlackTree();
+var x = 0;
+var val = "Another node!";
 
-tree.insert(4,"bitches");
-tree.insert(4,"oes");
-tree.insert(2,"hoe");
-tree.insert(2,"hoes");
-tree.insert(1,"Cunts");
-tree.insert(6,"wow");
-tree.insert(3,"haha");
-tree.insert(5,"lol");
-tree.insert(7,"I was here");
+while(x < 100) {
+  tree.insert(x,val);
+  x += 1;
+}
 
 tree.display();
 

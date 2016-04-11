@@ -11,6 +11,9 @@ var Dictionary = function() {
     this;
   };
 
+  var black = "black";
+  var red = "red";
+
   var root = Node();
   root.color = black;
 
@@ -230,9 +233,6 @@ var Dictionary = function() {
       leftChild(grandparent(node));
     }
   };
-
-  var black = "black";
-  var red = "red";
 
   this;
 };

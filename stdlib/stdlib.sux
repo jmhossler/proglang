@@ -1,2 +1,1 @@
 include("stdlib/println.sux");
-include("stdlib/dictionary.sux");
