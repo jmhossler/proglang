@@ -1,4 +1,4 @@
-include("testScripts/dictionary.sux");
+include("stdlib/dictionary.sux");
 
 var tree = RedBlackTree();
 
@@ -14,8 +14,4 @@ tree.insert(7,"I was here");
 
 tree.display();
 
-if(isValidRB(tree.root)) {
-  print("Valid tree!\n");
-} else {
-  print("Invalid tree!\n");
-}
+println(tree.find(6));

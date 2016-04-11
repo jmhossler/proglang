@@ -14,12 +14,14 @@ int main(int argc, char **argv) {
     exit(1);
   }
   FILE *fp = fopen(argv[1],"r");
+  FILE *stdlib = fopen("stdlib/stdlib.sux","r");
   printf("Parsing program\n");
   Lexeme *tree = parse(fp);
   printf("Parsing complete\n");
   //displayTree(tree,"");
 
   Lexeme *outer = createBuiltin();
+  eval(parse(stdlib),outer);
   Lexeme *global = extend(NULL,NULL,outer);
   Lexeme *result = eval(tree,global);
   //displayEnv(global);
