@@ -1,15 +1,16 @@
-var Node = function() {
-  var color;
-  var key;
-  var value;
+var Dictionary = function() {
+  // node
+  var Node = function() {
+    var color;
+    var key;
+    var value;
 
-  var parent;
-  var left;
-  var right;
-  this;
-};
+    var parent;
+    var left;
+    var right;
+    this;
+  };
 
-var RedBlackTree = function() {
   var root = Node();
   root.color = black;
 
@@ -103,135 +104,137 @@ var RedBlackTree = function() {
     }
     root.color = black;
   };
+
+  // helper functions
+
+  var addHelper = function(node,key,value) {
+    if(node.key == nil) {
+      node.color = red;
+      node.key = key;
+      node.value = value;
+      node;
+    } else {
+      if(node.key == key) {
+        node.value = value;
+      } else if(node.key < key) {
+        if(node.left == nil) {
+          node.left = Node();
+          node.left.parent = node;
+        }
+        addHelper(node.left,key,value);
+      } else {
+        if(node.right == nil) {
+          node.right = Node();
+          node.right.parent = node;
+        }
+        addHelper(node.right,key,value);
+      }
+    }
+  };
+
+  var isValidRB = function(node) {
+    if(node == nil) {
+      1;
+    } else if(color(node) == red) {
+      !(color(node.left) == red) && !(color(node.right) == red) && isValidRB(node.left) && isValidRB(node.right);
+    } else {
+      isValidRB(node.left) && isValidRB(node.right);
+    }
+  };
+
+  var isLeftChild = function(node) {
+    node.parent.left === node;
+  };
+
+  var rightChild = function(node) {
+    node.right;
+  };
+
+  var leftChild = function(node) {
+    node.left;
+  };
+
+  var color = function(node) {
+    if(node == nil) {
+      black;
+    } else {
+      node.color;
+    }
+  };
+
+  var parent = function(node) {
+    node.parent;
+  };
+
+  var sibling = function(node) {
+    if(isLeftChild(node)) {
+      rightChild(parent(node));
+    } else {
+      leftChild(parent(node));
+    }
+  };
+
+  var niece = function(node) {
+    if(isLeftChild(node)) {
+      leftChild(sibling(node));
+    } else {
+      rightChild(sibling(node));
+    }
+  };
+
+  var nephew = function(node) {
+    if(isLeftChild(node)) {
+      rightChild(sibling(node));
+    } else {
+      leftChild(sibling(node));
+    }
+  };
+
+  var linear = function(node) {
+    if(isLeftChild(node)) {
+      isLeftChild(parent(node));
+    } else {
+      !(isLeftChild(parent(node)));
+    }
+  };
+
+
+
+  var leaf = function(node) {
+    node == nil;
+  };
+
+  var blackHeight = function(node) {
+    if(leaf(node)) {
+      1;
+    } else {
+      var left = blackHeight(node.left);
+      var right = blackHeight(node.right);
+      if(left < right) {
+        1 + right;
+      } else {
+        1 + left;
+      }
+    }
+  };
+
+
+  var grandparent = function(node) {
+    node.parent.parent;
+  };
+
+  var uncle = function(node) {
+    if(isLeftChild(parent(node))) {
+      rightChild(grandparent(node));
+    } else {
+      leftChild(grandparent(node));
+    }
+  };
+
+  var black = "black";
+  var red = "red";
+
   this;
 };
-
-// Helper functions
-
-var addHelper = function(node,key,value) {
-  if(node.key == nil) {
-    node.color = red;
-    node.key = key;
-    node.value = value;
-    node;
-  } else {
-    if(node.key < key) {
-      if(node.left == nil) {
-        node.left = Node();
-        node.left.parent = node;
-      }
-      addHelper(node.left,key,value);
-    } else {
-      if(node.right == nil) {
-        node.right = Node();
-        node.right.parent = node;
-      }
-      addHelper(node.right,key,value);
-    }
-  }
-};
-
-var isValidRB = function(node) {
-  if(node == nil) {
-    1;
-  } else if(color(node) == red) {
-    !(color(node.left) == red) && !(color(node.right) == red) && isValidRB(node.left) && isValidRB(node.right);
-  } else {
-    isValidRB(node.left) && isValidRB(node.right);
-  }
-};
-
-var isLeftChild = function(node) {
-  node.parent.left === node;
-};
-
-var rightChild = function(node) {
-  node.right;
-};
-
-var leftChild = function(node) {
-  node.left;
-};
-
-var color = function(node) {
-  if(node == nil) {
-    black;
-  } else {
-    node.color;
-  }
-};
-
-var parent = function(node) {
-  node.parent;
-};
-
-var sibling = function(node) {
-  if(isLeftChild(node)) {
-    rightChild(parent(node));
-  } else {
-    leftChild(parent(node));
-  }
-};
-
-var niece = function(node) {
-  if(isLeftChild(node)) {
-    leftChild(sibling(node));
-  } else {
-    rightChild(sibling(node));
-  }
-};
-
-var nephew = function(node) {
-  if(isLeftChild(node)) {
-    rightChild(sibling(node));
-  } else {
-    leftChild(sibling(node));
-  }
-};
-
-var linear = function(node) {
-  if(isLeftChild(node)) {
-    isLeftChild(parent(node));
-  } else {
-    !(isLeftChild(parent(node)));
-  }
-};
-
-
-
-var leaf = function(node) {
-  node == nil;
-};
-
-var blackHeight = function(node) {
-  if(leaf(node)) {
-    1;
-  } else {
-    var left = blackHeight(node.left);
-    var right = blackHeight(node.right);
-    if(left < right) {
-      1 + right;
-    } else {
-      1 + left;
-    }
-  }
-};
-
-
-var grandparent = function(node) {
-  node.parent.parent;
-};
-
-var uncle = function(node) {
-  if(isLeftChild(parent(node))) {
-    rightChild(grandparent(node));
-  } else {
-    leftChild(grandparent(node));
-  }
-};
-
-
-var black = "black";
-var red = "red";
 
 

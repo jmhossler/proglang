@@ -1,3 +1,6 @@
+/*
+ * Author: John Hossler
+ */
 #ifndef EVAL_CS403_JH_2016
 #define EVAL_CS403_JH_2016
 #include "../lexer/lexer.h"
@@ -11,5 +14,6 @@ Lexeme *evalCons(Lexeme *, Lexeme *);
 Lexeme *evalCdr(Lexeme *, Lexeme *);
 Lexeme *evalArr(Lexeme *, Lexeme *);
 Lexeme *evalAppend(Lexeme *, Lexeme *);
+Lexeme *evalLength(Lexeme *, Lexeme *);
 
 #endif

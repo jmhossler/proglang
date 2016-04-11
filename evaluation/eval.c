@@ -125,6 +125,19 @@ Lexeme *evalInclude(Lexeme *tree, Lexeme *env) {
   return result;
 }
 
+Lexeme *evalLength(Lexeme *tree, Lexeme *env) {
+  Lexeme *eargs = evalExprList(tree,env);
+  Lexeme *val = car(eargs);
+  Lexeme *result = lexeme(INTEGER);
+  if(!strcmp(val->type,ARRAY) || !strcmp(val->type,STRING)) {
+    result->ival = val->ival;
+  } else {
+    result->ival = 0;
+  }
+
+  return result;
+}
+
 Lexeme *evalPrint(Lexeme *tree, Lexeme *env) {
   //printf("Starting print\n");
   //displayTree(tree,"");
@@ -274,9 +287,11 @@ Lexeme *evalFuncArgs(Lexeme *tree, Lexeme *params, Lexeme *env) {
     return lexeme(NIL);
   } else if(tree == NULL || !strcmp(tree->type,NIL)) {
     //printf("tree nil\n");
+    fprintf(stderr,"Too few arguments for function call\n");
     return lexeme(NIL);
   } else if(params == NULL || !strcmp(params->type,NIL)) {
     //printf("params nil\n");
+    fprintf(stderr,"Too many arguments for function call\n");
     return lexeme(NIL);
   } else if(!strcmp(car(params)->type,OPAREN)) {
     //printf("thunk!\n");

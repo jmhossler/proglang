@@ -35,30 +35,53 @@ Lexeme *createBuiltin() {
   Lexeme *print = lexeme(ID);
   print->sval = "print";
   Lexeme *defPrint = lexeme(BUILTIN);
-  defPrint->sval = "print";
   defPrint->builtin = evalPrint;
+
   Lexeme *include = lexeme(ID);
   include->sval = "include";
   Lexeme *defInclude = lexeme(BUILTIN);
-  defInclude->sval = "include";
   defInclude->builtin = evalInclude;
+
   Lexeme *cons = lexeme(ID);
   cons->sval = "cons";
   Lexeme *defCons = lexeme(BUILTIN);
   defCons->builtin = evalCons;
+
   Lexeme *cdr = lexeme(ID);
   cdr->sval = "cdr";
   Lexeme *defCdr = lexeme(BUILTIN);
   defCdr->builtin = evalCdr;
+
   Lexeme *car = lexeme(ID);
   car->sval = "car";
   Lexeme *defCar = lexeme(BUILTIN);
   defCar->builtin = evalCar;
+
+  Lexeme *arr = lexeme(ID);
+  arr->sval = "array";
+  Lexeme *defArr = lexeme(BUILTIN);
+  defArr->builtin = evalArr;
+
+  Lexeme *append = lexeme(ID);
+  append->sval = "append";
+  Lexeme *defAppend = lexeme(BUILTIN);
+  defAppend->builtin = evalAppend;
+
+  Lexeme *length = lexeme(ID);
+  length->sval = "length";
+  Lexeme *defLength = lexeme(BUILTIN);
+  defLength->builtin = evalLength;
+
   Lexeme *env = create();
+
   insert(print,defPrint,env);
   insert(include,defInclude,env);
   insert(cons,defCons,env);
   insert(cdr,defCdr,env);
   insert(car,defCar,env);
+  insert(arr,defArr,env);
+  insert(append,defAppend,env);
+  insert(length,defLength,env);
+
   return env;
 }
