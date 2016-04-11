@@ -1,0 +1,21 @@
+include("testScripts/dictionary.sux");
+
+var tree = RedBlackTree();
+
+tree.insert(4,"bitches");
+tree.insert(4,"oes");
+tree.insert(2,"hoe");
+tree.insert(2,"hoes");
+tree.insert(1,"Cunts");
+tree.insert(6,"wow");
+tree.insert(3,"haha");
+tree.insert(5,"lol");
+tree.insert(7,"I was here");
+
+tree.display();
+
+if(isValidRB(tree.root)) {
+  print("Valid tree!\n");
+} else {
+  print("Invalid tree!\n");
+}
