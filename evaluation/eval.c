@@ -709,6 +709,7 @@ Lexeme *evalEqual(Lexeme *tree, Lexeme *env) {
   //printf("Here1\n");
   Lexeme *result = lexeme(INTEGER);
   result->ival = 0;
+  //printf("First: %s\tSecond: %s\n",displayLexeme(*(car(tree))),displayLexeme(*(cdr(tree))));
   if(areEqual(left,right,INTEGER)) {
     result->ival = left->ival == right->ival;
   } else if(areEqual(left,right,STRING)) {
@@ -721,8 +722,10 @@ Lexeme *evalEqual(Lexeme *tree, Lexeme *env) {
     } else {
       result->ival = 0;
     }
+  } else if(areEqual(left,right,ENV)) {
+    result->ival = left == right;
   } else {
-    fprintf(stderr,"Incompatible types for comparison\n");
+    fprintf(stderr,"Incompatible types for == comparison, %s and %s\n",left->type,right->type);
   }
   return result;
 }
