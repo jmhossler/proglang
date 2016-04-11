@@ -1,11 +1,2 @@
-var println = function(@) {
-  apply(@,print);
-  print("\n");
-};
+include("stdlib/println.sux");
 
-var apply = function(list,func) {
-  if(!(list == nil)) {
-    func(car(list));
-    apply(cdr(list),func);
-  }
-};
