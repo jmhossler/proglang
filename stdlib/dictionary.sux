@@ -135,13 +135,17 @@ var Dictionary = function() {
     }
   };
 
-  var isValidRB = function(node) {
+  var isValidRB = function() {
+    isValidRBHelper(root);
+  };
+
+  var isValidRBHelper = function(node) {
     if(node == nil) {
       1;
     } else if(color(node) == red) {
-      !(color(node.left) == red) && !(color(node.right) == red) && isValidRB(node.left) && isValidRB(node.right);
+      !(color(node.left) == red) && !(color(node.right) == red) && isValidRBHelper(node.left) && isValidRBHelper(node.right);
     } else {
-      isValidRB(node.left) && isValidRB(node.right);
+      isValidRBHelper(node.left) && isValidRBHelper(node.right);
     }
   };
 

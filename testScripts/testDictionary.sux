@@ -4,11 +4,19 @@ var tree = Dictionary();
 var x = 0;
 var val = "Another node!";
 
+println("Beginning insert");
 while(x < 100) {
   tree.insert(x,val);
   x += 1;
 }
+println("");
 
+println("Finished inserting values into tree");
 tree.display();
+//if(tree.isValidRB()) {
+//  println("Valid tree!");
+//} else {
+//  println("Invalid tree!");
+//}
 
-println(tree.find(6));
+println(tree.find(9999));

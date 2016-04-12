@@ -233,8 +233,7 @@ Lexeme *lexString(Parser *p, int c) {
       } else if(n == 'r') {
         string[filled++] = '\r';
       } else {
-        ungetc(n,p->fp);
-        string[filled++] = '\\';
+        string[filled++] = n;
       }
     }
     n = getNextCharacter(p);

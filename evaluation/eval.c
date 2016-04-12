@@ -366,6 +366,16 @@ Lexeme *evalFuncCall(Lexeme *tree, Lexeme *env) {
   return eval(getBody(closure),newScope);
 }
 
+/* TODO maybe? idk
+Lexeme *reconstructDotTree(Lexeme *tree, Lexeme *env) {
+  if(tree == NULL || !strcmp(tree->type,NIL)) {
+    return lexeme(NIL);
+  } else if(!strcmp(tree->type,FUNCCALL)) {
+    return NULL;
+  }
+}
+*/
+
 Lexeme *evalDot(Lexeme *tree, Lexeme *env) {
   //printf("Type of car: %s\n",displayLexeme(*(car(tree))));
   //printf("Type of cdr: %s\n",displayLexeme(*(cdr(tree))));
@@ -424,6 +434,20 @@ Lexeme *evalArrayCall(Lexeme *tree, Lexeme *env) {
       // TODO add test for size
       if(expr->ival < arr->ival) {
         result = arr->aval[expr->ival];
+      } else {
+        fprintf(stderr,"Index out of range, range %d, index %d\n",arr->ival,expr->ival);
+      }
+    } else {
+      fprintf(stderr,"Cannot index with index type %s\n",displayLexeme(*expr));
+      exit(1);
+    }
+  } else if(!strcmp(arr->type,STRING)) {
+    if(!strcmp(expr->type,INTEGER)) {
+      if(expr->ival < arr->ival - 1) {
+        result->type = STRING;
+        result->sval = malloc(sizeof(char));
+        result->sval[0] = arr->sval[expr->ival];
+        result->ival = 1;
       } else {
         fprintf(stderr,"Index out of range, range %d, index %d\n",arr->ival,expr->ival);
       }
