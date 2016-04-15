@@ -2,5 +2,5 @@ var x = function((a)) {
   a;
 };
 
-x(1 + 10);
+println(x(1 + 10));
 

@@ -1,4 +1,3 @@
-include("stdlib/dictionary.sux");
 var tree = Dictionary();
 
 var x = 0;

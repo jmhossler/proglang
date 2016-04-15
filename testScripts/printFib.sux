@@ -9,6 +9,6 @@ var fib = function(n) {
 var x = 0;
 while(x != 10) {
   //print(x,"\n");
-  print("Fib ",x,": ",fib(x),"\n");
+  println("Fib ",x,": ",fib(x));
   x = x + 1;
 }

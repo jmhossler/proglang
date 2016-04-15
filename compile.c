@@ -15,18 +15,19 @@ int main(int argc, char **argv) {
   }
   FILE *fp = fopen(argv[1],"r");
   FILE *stdlib = fopen("stdlib/stdlib.sux","r");
-  printf("Parsing program\n");
+  //printf("Parsing program\n");
   Lexeme *tree = parse(fp);
-  printf("Parsing complete\n");
+  //printf("Parsing complete\n");
   //displayTree(tree,"");
 
   Lexeme *outer = createBuiltin();
   eval(parse(stdlib),outer);
   Lexeme *global = extend(NULL,NULL,outer);
-  Lexeme *result = eval(tree,global);
+  eval(tree,global);
+  //Lexeme *result = eval(tree,global);
   //displayEnv(global);
 
-  printf("Result: %s\n",displayLexeme(*result));
+  //printf("Result: %s\n",displayLexeme(*result));
 
   return 0;
 }

@@ -255,7 +255,6 @@ Lexeme *whileLoop(Parser *p) {
 
 // expression: primary
 //           | primary operator expression
-//           | operator primary
 //           | VAR ID optInit
 Lexeme *expression(Parser *p) {
   Lexeme *a, *b, *c;
@@ -364,7 +363,7 @@ Lexeme *primitive(Parser *p) {
 }
 
 Lexeme *idExpr(Parser *p) {
-  Lexeme *a, *b = NULL;
+  Lexeme *a, *b = NULL, *e = NULL;
   a = match(p,ID);
   if(check(p,OPAREN)) {
     match(p,OPAREN);
@@ -380,15 +379,21 @@ Lexeme *idExpr(Parser *p) {
     return cons(ARRAYCALL,a,b);
   } else if(check(p,DOT)) {
     b = match(p,DOT);
-    b->right = idExpr(p);
+    e = primary(p);
     b->left = a;
+    if(!strcmp(e->type,FUNCCALL)) {
+      b->right = e->left;
+      e->left = b;
+      return e;
+    }
+    b->right = e;
     return b;
   }
   return a;
 }
 
 Lexeme *parenExpr(Parser *p) {
-  Lexeme *a, *b = NULL;
+  Lexeme *a, *b = NULL, *e = NULL;
   match(p,OPAREN);
   a = expression(p);
   match(p,CPAREN);
@@ -406,8 +411,14 @@ Lexeme *parenExpr(Parser *p) {
     return cons(ARRAYCALL,a,b);
   } else if(check(p,DOT)) {
     b = match(p,DOT);
-    b->right = idExpr(p);
+    e = primary(p);
     b->left = a;
+    if(!strcmp(e->type,FUNCCALL)) {
+      b->right = e->left;
+      e->left = b;
+      return e;
+    }
+    b->right = e;
     return b;
   }
   return a;
