@@ -1,0 +1,42 @@
+println("Multiplication 2 * 3: ",2 * 3);
+println("Addition 5 + 12: ", 5 + 12);
+println("Subtraction 13 - 28: ", 13 - 28);
+println("Division 10 / 3: ",10 / 3);
+println("Exponentiation 2 ** 4: ",2 ** 4);
+println("Mod 64 % 20: ",64 % 20);
+println("Comarisons, 5 comp 11:");
+var x = 5;
+var y = x;
+if(5 < 11) {
+  println("Less than");
+}
+if(5 <= 11) {
+  println("Less than or equal");
+}
+if(5 > 11) {
+  println("Greater than");
+}
+if(5 >= 11) {
+  println("Greater than or equal");
+}
+if(5 == 11) {
+  println("Equal");
+}
+if(x === y) {
+  println("Pointer equality");
+}
+if(x !== y) {
+  println("Pointer inequality");
+}
+if(1 || (1 / 0)) {
+  println("Or");
+}
+if(1 && 1) {
+  println("And");
+}
+if(1 ^ 0) {
+  println("Xor");
+}
+if(0 ^ 1) {
+  println("Xor2");
+}

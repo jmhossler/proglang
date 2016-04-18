@@ -139,18 +139,13 @@ Lexeme *evalLength(Lexeme *tree, Lexeme *env) {
 }
 
 Lexeme *evalPrint(Lexeme *tree, Lexeme *env) {
-  //printf("Starting print\n");
-  //displayTree(tree,"");
   Lexeme *eargs = evalExprList(tree,env);
-  //printf("Arguments evaluated\n");
   Lexeme *val = NULL;
   Lexeme *result = lexeme(STRING);
   result->sval = "print-done";
   result->ival = 10;
-  //displayTree(eargs,"");
   while(eargs != NULL && strcmp(eargs->type,NIL)) {
     val = car(eargs);
-    //printf("Printing %s\n",displayLexeme(*val));
     if(strcmp(val->type,INTEGER) == 0) {
       printf("%d",val->ival);
     } else if(strcmp(val->type,STRING) == 0) {
@@ -162,7 +157,6 @@ Lexeme *evalPrint(Lexeme *tree, Lexeme *env) {
     }
     eargs = cdr(eargs);
   }
-  //printf("Ending print\n");
   return result;
 }
 
@@ -673,6 +667,8 @@ Lexeme *evalExp(Lexeme *tree, Lexeme *env) {
   if(areEqual(left,right,INTEGER)) {
     result = lexeme(INTEGER);
     result->ival = (int) pow((double) left->ival,(double) right->ival);
+  } else {
+    fprintf(stderr,"Incompatible types for **, %s and %s\n",left->type,right->type);
   }
   return result;
 }
@@ -684,6 +680,9 @@ Lexeme *evalMod(Lexeme *tree, Lexeme *env) {
   if(areEqual(left,right,INTEGER)) {
     result = lexeme(INTEGER);
     result->ival = left->ival % right->ival;
+  } else {
+    fprintf(stderr,"Incompatible types for modulus, %s and %s\n",left->type,right->type);
+    result = lexeme(NIL);
   }
   return result;
 }
@@ -741,14 +740,10 @@ Lexeme *evalGT_EQ(Lexeme *tree, Lexeme *env) {
 }
 
 Lexeme *evalEqual(Lexeme *tree, Lexeme *env) {
-  //displayTree(tree,"");
   Lexeme *left = eval(car(tree),env);
-  //printf("here\n");
   Lexeme *right = eval(cdr(tree),env);
-  //printf("Here1\n");
   Lexeme *result = lexeme(INTEGER);
   result->ival = 0;
-  //printf("First: %s\tSecond: %s\n",displayLexeme(*(car(tree))),displayLexeme(*(cdr(tree))));
   if(areEqual(left,right,INTEGER)) {
     result->ival = left->ival == right->ival;
   } else if(areEqual(left,right,STRING)) {
@@ -776,42 +771,32 @@ Lexeme *evalNot_equal(Lexeme *tree, Lexeme *env) {
   Lexeme *result = lexeme(INTEGER);
   result->ival = 0;
   if(areEqual(left,right,INTEGER)) {
-    result->ival = left->ival != right->ival;
+    result->ival = (left->ival != right->ival);
   } else if(areEqual(left,right,STRING)) {
-    result->ival = strcmp(left->sval,right->sval) != 0;
+    result->ival = (strcmp(left->sval,right->sval));
+  } else if(areEqual(left,right,ENV)) {
+    result->ival = (left != right);
+  } else {
+    fprintf(stderr,"Incompatible types for != comparison, %s and %s\n",left->type,right->type);
   }
   return result;
 }
 
-// TODO free memory?
+// POINTER EQUALITY
 Lexeme *evalStrict_equal(Lexeme *tree, Lexeme *env) {
   Lexeme *left = eval(car(tree),env);
   Lexeme *right = eval(cdr(tree),env);
-  if(!strcmp(left->type,right->type)) {
-    Lexeme *op = lexeme(EQUAL);
-    op->left = left;
-    op->right = right;
-    return evalEqual(op,env);
-  } else {
-    Lexeme *result = lexeme(INTEGER);
-    result->ival = 0;
-    return result;
-  }
+  Lexeme *result = lexeme(INTEGER);
+  result->ival = left == right;
+  return result;
 }
 
 Lexeme *evalStrict_nequal(Lexeme *tree, Lexeme *env) {
   Lexeme *left = eval(car(tree),env);
   Lexeme *right = eval(cdr(tree),env);
-  if(!strcmp(left->type,right->type)) {
-    Lexeme *op = lexeme(NOT_EQUAL);
-    op->left = left;
-    op->right = right;
-    return eval(op,env);
-  } else {
-    Lexeme *result = lexeme(INTEGER);
-    result->ival = 1;
-    return result;
-  }
+  Lexeme *result = lexeme(INTEGER);
+  result->ival = (left != right);
+  return result;
 }
 
 Lexeme *evalOr(Lexeme *tree, Lexeme *env) {
@@ -863,12 +848,12 @@ Lexeme *evalNot(Lexeme *tree, Lexeme *env) {
 
 Lexeme *evalXor(Lexeme *tree, Lexeme *env) {
   Lexeme *left = eval(car(tree),env);
-  Lexeme *right = eval(car(tree),env);
+  Lexeme *right = eval(cdr(tree),env);
   Lexeme *result = lexeme(INTEGER);
   result->ival = 0;
   if(areEqual(left,right,INTEGER)) {
     if(left->ival) {
-      result->ival = !right->ival;
+      result->ival = right->ival == 0;
     } else {
       result->ival = right->ival;
     }

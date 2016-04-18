@@ -1,0 +1,180 @@
+
+var andgatedelay = 3;
+var inverterdelay = 2;
+var orgatedelay = 5;
+
+var PriorityQ = function() {
+  var events;
+  var clock = 0;
+  var insert = function(skip,f) {
+    var when = clock + skip;
+    var iter = function(items) {
+      if(items == nil) {
+        cons(cons(when,cons(f,nil)),nil);
+      } else if(when < car(car(items))) {
+        cons(cons(when,cons(f,nil)),items);
+      } else {
+        cons(car(items),iter(cdr(items)));
+      }
+    };
+    events = iter(events);
+  };
+  var empty = function() {
+    events == nil;
+  };
+  var go = function() {
+    if(events == nil) {
+      1;
+    } else {
+      var event = car(events);
+      events = cdr(events);
+      clock = car(event);
+      (car(cdr(event)))();
+      go();
+    }
+  };
+  var peekTime = function() {
+    clock;
+  };
+  var peekFunction = function() {
+    car(cdr(car(events)));
+  };
+  this;
+};
+
+var q = PriorityQ();
+
+var makewire = function() {
+  var signalvalue = 0;
+  var actionprocedures = nil;
+  var setmysignal = function(newvalue) {
+    if(!(signalvalue == newvalue)) {
+      signalvalue = newvalue;
+      calleach(actionprocedures);
+    }
+  };
+  var acceptactionprocedure = function(proc) {
+    actionprocedures = cons(proc,actionprocedures);
+    proc();
+  };
+  var getsignal = function() {
+    signalvalue;
+  };
+  var setsignal = function() {
+    setmysignal;
+  };
+  var addaction = function() {
+    acceptactionprocedure;
+  };
+
+  this;
+};
+
+var calleach = function(procedures) {
+  if(!(procedures == nil)) {
+    (car(procedures))();
+    calleach(cdr(procedures));
+  }
+};
+
+var getsignal = function(wire) {
+  wire.getsignal();
+};
+var setsignal = function(wire,newvalue) {
+  (wire.setsignal())(newvalue);
+};
+var addaction = function(wire, actionprocedure) {
+  (wire.addaction())(actionprocedure);
+};
+
+var halfadder = function(a,b,s,c) {
+  var d = makewire();
+  var e = makewire();
+  orgate(a,b,d);
+  andgate(a,b,c);
+  inverter(c,e);
+  andgate(d,e,s);
+};
+
+var fulladder = function(a,b,cin,sum,cout) {
+  var s = makewire();
+  var c1 = makewire();
+  var c2 = makewire();
+  halfadder(b,cin,s,c1);
+  halfadder(a,s,sum,c2);
+  orgate(c1,c2,cout);
+};
+
+var inverter = function(input,output) {
+  var invertinput = function() {
+    var newvalue = logicalnot(getsignal(input));
+    afterdelay(inverterdelay,function() { setsignal(output,newvalue); });
+  };
+  addaction(input,invertinput);
+};
+
+var logicalnot = function(s) {
+  if(s == 0) {
+    1;
+  } else if(s == 1) {
+    0;
+  } else {
+    println("Invalid signal",s);
+  }
+};
+
+var andgate = function(a1,a2,output) {
+  var andactionprocedure = function() {
+    var newvalue = logicaland(getsignal(a1),getsignal(a2));
+    afterdelay(andgatedelay,function() { setsignal(output,newvalue); });
+  };
+  addaction(a1,andactionprocedure);
+  addaction(a2,andactionprocedure);
+};
+
+var logicaland = function(s1,s2) {
+  if(s1 && s2) {
+    1;
+  } else {
+    0;
+  }
+};
+
+var orgate = function(a1,a2,output) {
+  var oractionprocedure = function() {
+    var newvalue = logicalor(getsignal(a1),getsignal(a2));
+    afterdelay(andgatedelay,function() { setsignal(output,newvalue); });
+  };
+  addaction(a1,oractionprocedure);
+  addaction(a2,oractionprocedure);
+};
+
+var logicalor = function(s1,s2) {
+  if(s1 || s2) {
+    1;
+  } else {
+    0;
+  }
+};
+
+
+var afterdelay = function(delay,action) {
+  agenda.insert(delay + agenda.peekTime(),action);
+};
+
+var probe = function(name,wire) {
+  addaction(wire,function() { println(""); println(name," ",agenda.peekTime()," New value = ",getsignal(wire)); });
+};
+
+var agenda = PriorityQ();
+var input1 = makewire();
+var input2 = makewire();
+var sum = makewire();
+var carry = makewire();
+probe("sum",sum);
+probe("carry",carry);
+
+halfadder(input1,input2,sum,carry);
+
+setsignal(input1,1);
+agenda.go();

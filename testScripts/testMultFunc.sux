@@ -1,0 +1,7 @@
+var f = function() {
+  function() {
+    3;
+  };
+};
+
+println((f())());

@@ -1,0 +1,5 @@
+var str = "Hello\"Bitch\"";
+
+println(str);
+println(str[4]);
+println(str[10000]);

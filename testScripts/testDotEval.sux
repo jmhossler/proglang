@@ -1,0 +1,13 @@
+var f = (function() {
+  var a = 4;
+  var x = function(x) {
+    x;
+  };
+  this;
+})();
+
+var a = 3;
+
+println("(f.x)(a) Result: ",(f.x)(a));
+println("f.x(a) Result: ",f.x(a));
+println("It should be 3");

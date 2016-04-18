@@ -166,6 +166,7 @@ Lexeme *lexNumber(Parser *p, int c) {
     n = getNextCharacter(p);
   }
   ungetc(n,p->fp);
+  num[filled++] = '\0';
   new->ival = atoi(num);
   new->sval = num;
 
@@ -180,7 +181,7 @@ Lexeme *lexID(Parser *p, int c) {
   name[0] = c;
   n = getNextCharacter(p);
 
-  while((isalpha(n) || isdigit(n)) && !isWhiteSpace(n) && n != EOF) {
+  while((isalpha(n) || isdigit(n) || n == '-') && !isWhiteSpace(n) && n != EOF) {
     if(filled >= size) {
       name = resize(name,&size);
     }

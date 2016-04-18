@@ -35,6 +35,7 @@ Lexeme *lookup(Lexeme *variable, Lexeme *env) {
   }
 
   fprintf(stderr,"Variable %s is undefined\n",displayLexeme(*variable));
+  exit(1);
 
   return lexeme(NIL);
 }

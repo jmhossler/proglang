@@ -1,0 +1,25 @@
+var zero = function(f) {
+  function(x) {
+    x;
+  };
+};
+
+var one = function(f) {
+  function(x) {
+    f(x);
+  };
+};
+
+var two = function(f) {
+  function(x) {
+    f(f(x));
+  };
+};
+
+var incr = function(x) {
+  x + 1;
+};
+
+println("Zero: ",(zero(incr))(0));
+println("One: ",(one(incr))(0));
+println("Two: ",(two(incr))(0));
