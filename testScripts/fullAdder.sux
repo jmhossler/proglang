@@ -167,6 +167,7 @@ var probe = function(name,wire) {
 };
 
 var agenda = PriorityQ();
+
 var input1 = makewire();
 var input2 = makewire();
 var sum = makewire();
