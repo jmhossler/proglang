@@ -10,12 +10,5 @@ while(x < 100) {
 }
 println("");
 
-println("Finished inserting values into tree");
-tree.display();
-//if(tree.isValidRB()) {
-//  println("Valid tree!");
-//} else {
-//  println("Invalid tree!");
-//}
-
-println(tree.find(9999));
+println("Finished inserting ",x," values into tree");
+println("Max height of tree: ", tree.height());

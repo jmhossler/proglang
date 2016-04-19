@@ -181,7 +181,7 @@ Lexeme *lexID(Parser *p, int c) {
   name[0] = c;
   n = getNextCharacter(p);
 
-  while((isalpha(n) || isdigit(n) || n == '-') && !isWhiteSpace(n) && n != EOF) {
+  while((isalpha(n) || isdigit(n)) && !isWhiteSpace(n) && n != EOF) {
     if(filled >= size) {
       name = resize(name,&size);
     }

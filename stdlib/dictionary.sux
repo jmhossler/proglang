@@ -211,12 +211,16 @@ var Dictionary = function() {
     node == nil;
   };
 
-  var blackHeight = function(node) {
+  var height = function() {
+    heightHelper(root);
+  };
+
+  var heightHelper = function(node) {
     if(leaf(node)) {
-      1;
+      0;
     } else {
-      var left = blackHeight(node.left);
-      var right = blackHeight(node.right);
+      var left = heightHelper(node.left);
+      var right = heightHelper(node.right);
       if(left < right) {
         1 + right;
       } else {
