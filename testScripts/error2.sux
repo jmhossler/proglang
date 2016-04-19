@@ -1,0 +1,6 @@
+// incorrect initializer for function
+var x(a) {
+  a;
+};
+
+println(x(1));

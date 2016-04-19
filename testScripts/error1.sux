@@ -1,0 +1,4 @@
+// While loop without a condition
+while {
+  println("Hello!");
+}

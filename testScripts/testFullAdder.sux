@@ -1,0 +1,16 @@
+include("testScripts/fullAdder.sux");
+
+var a = makewire();
+var b = makewire();
+var out = makewire();
+var cout = makewire();
+
+// Edit the signals here
+setsignal(a,0);
+setsignal(b,1);
+
+add1(a,b,out,cout);
+
+agenda.go();
+
+println("Out: ",getsignal(out),"\tCarry: ",getsignal(cout));

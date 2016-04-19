@@ -133,7 +133,7 @@ var andgate = function(a1,a2,output) {
 };
 
 var logicaland = function(s1,s2) {
-  if(s1 && s2) {
+  if((s1 == 1) && (s2 == 1)) {
     1;
   } else {
     0;
@@ -150,7 +150,7 @@ var orgate = function(a1,a2,output) {
 };
 
 var logicalor = function(s1,s2) {
-  if(s1 || s2) {
+  if((s1 == 1) || (s2 == 1)) {
     1;
   } else {
     0;
@@ -168,14 +168,9 @@ var probe = function(name,wire) {
 
 var agenda = PriorityQ();
 
-var input1 = makewire();
-var input2 = makewire();
-var sum = makewire();
-var carry = makewire();
-probe("sum",sum);
-probe("carry",carry);
-
-halfadder(input1,input2,sum,carry);
-
-setsignal(input1,1);
-agenda.go();
+var add1 = function(a,b,out,cout) {
+  var cin = makewire();
+  setsignal(cin,0);
+  fulladder(a,b,cin,out,cout);
+  nil;
+};
