@@ -1,3 +1,6 @@
+/*
+ * Author: John Hossler
+ */
 #ifndef ENV_CS403_JH_2016
 #define ENV_CS403_JH_2016
 #include "../lexer/lexer.h"

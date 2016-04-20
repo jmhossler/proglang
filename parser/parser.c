@@ -1,6 +1,5 @@
 /*
  * Author: John Hossler
- *
  */
 #include <stdio.h>
 #include <stdlib.h>

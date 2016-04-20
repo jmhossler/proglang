@@ -1,3 +1,6 @@
+/*
+ * Author: John Hossler
+ */
 #include <stdio.h>
 #include "lexer.h"
 #include "types.h"

@@ -1,3 +1,6 @@
+/*
+ * Author: John Hossler
+ */
 #include <stdlib.h>
 #include <math.h>
 #include "eval.h"
