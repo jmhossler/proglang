@@ -2,6 +2,16 @@
 
 /*Author: John Hossler*/
 
+****************NOTE***************
+Every file assumes that you run the compile program from the root
+of this projects directory.
+DO NOT cd into any of the subdirectories and try and run scripts in
+there. Simply run compile from the root* directory and specify where the
+file is RELATIVE to the root* directory.
+
+* Any reference to the root directory means the directory where the
+makefile is, i.e. the main directory of this project.
+
 # Contents
 ## Syntax - here I explain the general syntax of my language
 ----STATEMENTS
