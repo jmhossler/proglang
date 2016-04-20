@@ -3,3 +3,6 @@ var str = "Hello \"World\"";
 println(str);
 println(str[4]);
 println(str[10000]);
+
+var newStr = str + "World";
+println(newStr);

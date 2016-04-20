@@ -20,7 +20,7 @@ types.o: types/types.c types/types.h
 	gcc -Wall -c types/types.c
 
 clean:
-	rm *.o compile
+	rm *.o
 
 run:
 	bash test.sh

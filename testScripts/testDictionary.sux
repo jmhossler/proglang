@@ -1,15 +1,20 @@
 // The code for the dictionary can be found under stdlib/dictionary.sux
-var tree = Dictionary();
+var f = function(n) {
+  var x = 0;
+  var val = "Another node!";
+  var tree = Dictionary();
+  println("Beginning insertion of ",n," nodes linearly");
+  while(x < n) {
+    tree.insert(x,val);
+    x += 1;
+  }
 
-var x = 0;
-var val = "Another node!";
+  println("\nFinished inserting ",x," values into tree");
+  println("Max height of tree: ", tree.height());
+};
 
-println("Beginning insert");
-while(x < 100) {
-  tree.insert(x,val);
-  x += 1;
-}
+f(100);
 println("");
-
-println("Finished inserting ",x," values into tree");
-println("Max height of tree: ", tree.height());
+f(1000);
+println("");
+f(10000);

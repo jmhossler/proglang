@@ -234,7 +234,7 @@ Lexeme *evalAppend(Lexeme *tree, Lexeme *env) {
   if(typeEqual(arr,lexeme(ARRAY))) {
     arr->aval = resizeLexArr(arr->aval,&newSize);
     arr->aval[arr->ival] = val;
-    arr->ival = arr->ival + 1;
+    arr->ival = newSize;
   } else {
     fprintf(stderr,"Can only append to arrays\n");
   }
