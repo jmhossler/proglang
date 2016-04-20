@@ -1,3 +1,4 @@
+// The code for the dictionary can be found under stdlib/dictionary.sux
 var tree = Dictionary();
 
 var x = 0;
