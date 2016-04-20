@@ -80,3 +80,9 @@ cat-dictionary:
 
 run-dictionary:
 	./compile testScripts/testDictionary.sux
+
+cat-problem:
+	cat testScripts/testOneBitAdder.sux
+
+run-problem:
+	./compile testScripts/testOneBitAdder.sux

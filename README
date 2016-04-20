@@ -253,5 +253,14 @@ project):
 
 compile testScripts/testOneBitAdder.sux
 
+or, you can use the makefile command:
+
+make cat-problem
+make run-problem
+
+This will display the program that tests the One Bit adder. To see
+the code for the actual adder, and how I implemented it, see the file
+"testScripts/fullAdder.sux".
+
 This will report the final state of the output wire and the carry out
 wire.
