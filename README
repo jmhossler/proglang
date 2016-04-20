@@ -209,6 +209,27 @@ Example of testing the dictionary:
 
 compile testScripts/testDictionary.sux
 
+My tests in my makefile are exactly as specified in the dpl.html:
+
+make cat-error1
+make run-error1
+make cat-error2
+make run-error2
+make cat-error3
+make run-error3
+make cat-arrays
+make run-arrays
+make cat-conditionals
+make run-conditionals
+make cat-recursion
+make run-recursion
+make cat-iteration
+make run-iteration
+make cat-functions
+make run-functions
+make cat-dictionary
+make run-dictionary
+
 ## One bit adder
 
 In order to change the values, simply open up the file
