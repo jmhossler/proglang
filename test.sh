@@ -9,6 +9,6 @@ do
   echo
   echo "Running $f"
   echo
-  ./compile "$f"
+  ./sux "$f"
   echo
 done
